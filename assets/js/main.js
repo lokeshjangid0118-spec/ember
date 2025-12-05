@@ -1,3 +1,31 @@
+
+
+// IMMEDIATE PRELOADER CONTROL
+    (function() {
+      // Remove loading class immediately
+      document.documentElement.classList.remove('loading');
+      document.body.classList.remove('loading');
+      
+      const preloader = document.getElementById('preloader');
+      const content = document.getElementById('content');
+      
+      // 3 second perfect display
+      setTimeout(() => {
+        preloader.classList.add('fade-out');
+        
+        setTimeout(() => {
+          preloader.remove();
+          if (content) {
+            content.style.display = 'block';
+          }
+          // Enable scroll
+          document.documentElement.style.overflow = 'auto';
+          document.body.style.overflow = 'auto';
+        }, 850);
+      }, 2000);
+    })();
+
+
 //    Toggle Button Function 
 function myFunction(x) {
   x.classList.toggle("change");
@@ -26,41 +54,41 @@ let swiper = new Swiper('.mySwiper', {
 
 
 ////////  Photography Category start ////////
-  const customSwiper = new Swiper('.customSwiper', {
-      effect: 'coverflow',
-      grabCursor: true,
-      centeredSlides: true,
-      loop: true,
-      autoplay: {
-        delay: 3000,
-        disableOnInteraction: false,
-      },
-      coverflowEffect: {
-        rotate: 40,
-        stretch: 0,
-        depth: 200,
-        modifier: 1,
-        slideShadows: false,
-      },
-      navigation: {
-        nextEl: '.customSwiper .swiper-button-next',
-        prevEl: '.customSwiper .swiper-button-prev',
-      },
-      breakpoints: {
-        0: {
-          slidesPerView: 1,
-          spaceBetween: 20,
-        },
-        768: {
-          slidesPerView: 2,
-          spaceBetween: 30,
-        },
-        1024: {
-          slidesPerView: 3,
-          spaceBetween: 40,
-        }
-      }
-    });
+const customSwiper = new Swiper('.customSwiper', {
+  effect: 'coverflow',
+  grabCursor: true,
+  centeredSlides: true,
+  loop: true,
+  autoplay: {
+    delay: 3000,
+    disableOnInteraction: false,
+  },
+  coverflowEffect: {
+    rotate: 40,
+    stretch: 0,
+    depth: 200,
+    modifier: 1,
+    slideShadows: false,
+  },
+  navigation: {
+    nextEl: '.customSwiper .swiper-button-next',
+    prevEl: '.customSwiper .swiper-button-prev',
+  },
+  breakpoints: {
+    0: {
+      slidesPerView: 1,
+      spaceBetween: 20,
+    },
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 30,
+    },
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 40,
+    }
+  }
+});
 
 ////////  Photography Category end ////////
 
@@ -125,11 +153,11 @@ class Sparkles {
     this.ctx = this.canvas.getContext("2d");
 
     // Tuned performance values
-    this.intensity = 18;        
-    this.perMove = 4;           
-    this.maxSparkles = 180;     
+    this.intensity = 18;
+    this.perMove = 4;
+    this.maxSparkles = 180;
     this.sparkles = [];
-    this.lastMoveTime = 0;      
+    this.lastMoveTime = 0;
 
     // Resize canvas on window change
     this.onResize();
@@ -228,3 +256,79 @@ document.addEventListener('DOMContentLoaded', () => {
     new Sparkles(canvas);
   }
 });
+
+
+document.querySelectorAll(".faq-question").forEach((question) => {
+  question.addEventListener("click", () => {
+    const answer = question.nextElementSibling;
+    const icon = question.querySelector(".faq-icon");
+
+    // Close all other FAQs
+    document.querySelectorAll(".faq-answer").forEach((ans) => {
+      if (ans !== answer) {
+        ans.classList.remove("open");
+      }
+    });
+
+    document.querySelectorAll(".faq-icon").forEach((ic) => {
+      if (ic !== icon) ic.textContent = "+";
+    });
+
+    // Toggle current
+    answer.classList.toggle("open");
+    icon.textContent = answer.classList.contains("open") ? "×" : "+";
+  });
+});
+
+// FAQ Section End
+
+
+// Testimonials Section Start
+
+const track = document.querySelector(".track");
+let cards = document.querySelectorAll(".card");
+
+// Duplicate Cards for Infinite Loop
+track.innerHTML += track.innerHTML;
+
+// Re-select cards after duplication
+cards = document.querySelectorAll(".card");
+
+let index = 0;
+
+// Detect visible cards based on screen size
+function getVisibleCards() {
+  if (window.innerWidth <= 576) return 1;  // Mobile
+  if (window.innerWidth <= 992) return 2;  // Tablet
+  return 3;                                // Desktop
+}
+
+function autoSlide() {
+  const visible = getVisibleCards();
+  const movePercent = 100 / visible;
+
+  index++;
+
+  track.style.transition = "transform 0.6s ease";
+  track.style.transform = `translateX(-${index * movePercent}%)`;
+
+  // Infinite Loop Reset
+  if (index >= cards.length - visible) {
+    setTimeout(() => {
+      track.style.transition = "none";
+      index = 0;
+      track.style.transform = "translateX(0)";
+    }, 600);
+  }
+}
+
+setInterval(autoSlide, 3000);
+
+// Reset on resize
+window.addEventListener("resize", () => {
+  index = 0;
+  track.style.transition = "none";
+  track.style.transform = "translateX(0)";
+});
+
+// Testimonials Section End
