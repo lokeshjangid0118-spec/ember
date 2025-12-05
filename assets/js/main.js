@@ -1,30 +1,33 @@
 
 
-// IMMEDIATE PRELOADER CONTROL
-    (function() {
-      // Remove loading class immediately
-      document.documentElement.classList.remove('loading');
-      document.body.classList.remove('loading');
-      
-      const preloader = document.getElementById('preloader');
-      const content = document.getElementById('content');
-      
-      // 3 second perfect display
-      setTimeout(() => {
-        preloader.classList.add('fade-out');
-        
-        setTimeout(() => {
-          preloader.remove();
-          if (content) {
-            content.style.display = 'block';
-          }
-          // Enable scroll
-          document.documentElement.style.overflow = 'auto';
-          document.body.style.overflow = 'auto';
-        }, 850);
-      }, 2000);
-    })();
+// Preloader functionality
+document.addEventListener("DOMContentLoaded", function () {
 
+  // Remove loading class
+  document.documentElement.classList.remove("loading");
+  document.body.classList.remove("loading");
+
+  const preloader = document.getElementById("preloader");
+  const content = document.getElementById("content");
+
+  // Preloader visible minimum 2 seconds
+  setTimeout(() => {
+    preloader.classList.add("fade-out");
+
+    setTimeout(() => {
+      preloader.style.display = "none";
+      content.style.display = "block";
+
+      // Enable scroll after preloader
+      document.documentElement.style.overflow = "auto";
+      document.body.style.overflow = "auto";
+    }, 800);
+
+  }, 2000);
+
+});
+
+// Preloader functionality end
 
 //    Toggle Button Function 
 function myFunction(x) {
@@ -282,21 +285,18 @@ document.querySelectorAll(".faq-question").forEach((question) => {
 
 // FAQ Section End
 
-
 // Testimonials Section Start
 
 const track = document.querySelector(".track");
 let cards = document.querySelectorAll(".card");
 
-// Duplicate Cards for Infinite Loop
+// Duplicate for infinite loop
 track.innerHTML += track.innerHTML;
-
-// Re-select cards after duplication
 cards = document.querySelectorAll(".card");
 
 let index = 0;
 
-// Detect visible cards based on screen size
+// Count visible cards by screen size
 function getVisibleCards() {
   if (window.innerWidth <= 576) return 1;  // Mobile
   if (window.innerWidth <= 992) return 2;  // Tablet
@@ -305,15 +305,17 @@ function getVisibleCards() {
 
 function autoSlide() {
   const visible = getVisibleCards();
-  const movePercent = 100 / visible;
 
   index++;
 
-  track.style.transition = "transform 0.6s ease";
-  track.style.transform = `translateX(-${index * movePercent}%)`;
+  // Each slide = width of ONE card
+  const cardWidth = 100 / visible;
 
-  // Infinite Loop Reset
-  if (index >= cards.length - visible) {
+  track.style.transition = "transform 0.6s ease";
+  track.style.transform = `translateX(-${index * cardWidth}%)`;
+
+  // Reset when reaching half the duplicated cards
+  if (index >= cards.length / 2) {
     setTimeout(() => {
       track.style.transition = "none";
       index = 0;
@@ -324,7 +326,7 @@ function autoSlide() {
 
 setInterval(autoSlide, 3000);
 
-// Reset on resize
+// Reset on resize to avoid glitches
 window.addEventListener("resize", () => {
   index = 0;
   track.style.transition = "none";
@@ -332,3 +334,4 @@ window.addEventListener("resize", () => {
 });
 
 // Testimonials Section End
+
